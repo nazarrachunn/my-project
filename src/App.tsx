@@ -2,20 +2,22 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 function App() {
-  const [randomItem, setRandomItem] = useState();
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/todos")
       .then((response) => response.json())
       .then((json) => {
-        setRandomItem(json[Math.floor(Math.random() * json.length)]);
+        setItems(json);
       });
   }, []);
 
   return (
     <>
       <header className="App-header">
-        {<p>{JSON.stringify(randomItem)}</p>}
+        {items.map((item, index) => {
+          return <p key={index}>{JSON.stringify(item)}</p>;
+        })}
       </header>
     </>
   );
