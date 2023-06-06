@@ -1,23 +1,26 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 
+interface Todo {
+  id: number;
+  title: string;
+}
+
 function App() {
-  const [randomItem, setRandomItem] = useState('');
+  const [items, setItems] = useState<Todo[]>([]);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
-      .then((json) => {
-        setRandomItem(
-          JSON.stringify(json[Math.floor(Math.random() * json.length)])
-        );
-      });
+      .then(setItems);
   }, []);
 
   return (
     <>
       <header className="App-header">
-        <p>{randomItem}</p>
+        {items.map((item) => {
+          return <p key={item.id}>{item.title}</p>;
+        })}
       </header>
     </>
   );
