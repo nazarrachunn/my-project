@@ -1,22 +1,25 @@
-import React, { useEffect, useState } from "react";
-import "./App.css";
+import React, { useEffect, useState } from 'react';
+import './App.css';
+
+interface Todo {
+  id: number;
+  title: string;
+}
 
 function App() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Todo[]>([]);
 
   useEffect(() => {
-    fetch("https://jsonplaceholder.typicode.com/todos")
+    fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
-      .then((json) => {
-        setItems(json);
-      });
+      .then(setItems);
   }, []);
 
   return (
     <>
       <header className="App-header">
-        {items.map((item, index) => {
-          return <p key={index}>{JSON.stringify(item)}</p>;
+        {items.map((item) => {
+          return <p key={item.id}>{item.title}</p>;
         })}
       </header>
     </>
