@@ -9,24 +9,22 @@ interface Todo {
 function App() {
   const [items, setItems] = useState<Todo[]>([]);
 
+  const todos = items.reduce((acc: any[], obj) => {
+    const values = Object.values(obj).slice(1, 3);
+    return [...acc, values];
+  }, []);
+
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then(setItems);
   }, []);
 
-  const handleGenerateItem = () => {
-    setItems([...items, { id: 4, title: 'et porro tempora' }]);
-  };
-
   return (
     <>
       <header className="App-header">
-        <button className="btn" onClick={handleGenerateItem}>
-          Generate item
-        </button>
-        {items.map((item) => {
-          return <p key={item.id}>{item.title}</p>;
+        {todos.map((todo) => {
+          return <pre key={todo.id}>{todo}</pre>;
         })}
       </header>
     </>
