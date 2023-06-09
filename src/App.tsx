@@ -1,11 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import TodoList from './TodoList';
+import Todo from './types';
 
-interface Todo {
-  id: number;
-  title: string;
-}
 function App() {
   const [items, setItems] = useState<Todo[]>([]);
 
@@ -13,10 +10,11 @@ function App() {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((data) => {
-        const todos = data.reduce((acc: Todo[], obj: Todo) => {
-          return [...acc, { id: obj.id, title: obj.title }];
+        data.reduce((acc: Todo[], cur: Todo) => {
+          return [...acc, [cur.id, cur.title]];
         }, []);
-        setItems(todos);
+
+        setItems(data);
       });
 
   }, []);
