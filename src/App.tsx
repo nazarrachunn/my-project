@@ -13,10 +13,8 @@ function App() {
         data.reduce((acc: Todo[], cur: Todo) => {
           return [...acc, [cur.id, cur.title]];
         }, []);
-
         setItems(data);
       });
-
   }, []);
 
   const handleGenerateItem = () => {
