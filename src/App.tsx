@@ -12,7 +12,12 @@ function App() {
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
-      .then(setItems);
+      .then((data) => {
+        const todos = data.reduce((acc: Todo[], obj: Todo) => {
+          return [...acc, { id: obj.id, title: obj.title }];
+        }, []);
+        setItems(todos);
+      });
   }, []);
 
   const handleGenerateItem = () => {
@@ -26,7 +31,11 @@ function App() {
           Generate item
         </button>
         {items.map((item) => {
-          return <p key={item.id}>{item.title}</p>;
+          return (
+            <pre key={item.id}>
+              {item.id} {item.title}
+            </pre>
+          );
         })}
       </header>
     </>
