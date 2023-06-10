@@ -4,21 +4,22 @@ import TodoList from './TodoList';
 import Todo from './types';
 
 function App() {
-  const [items, setItems] = useState<Todo[]>([]);
+  const [items, setItems] = useState([]);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((data) => {
-        const newArray = data.reduce((acc: Todo[], cur: Todo) => {
+        const array = data.reduce((acc: Todo[], cur: Todo) => {
           return [...acc, [cur.id, cur.title]];
         }, []);
-        setItems(newArray);
+        setItems(array);
       });
   }, []);
 
   const handleGenerateItem = () => {
-    setItems([...items, { id: 4, title: 'et porro tempora' }]);
+    const randInd = Math.floor(Math.random() * items.length);
+    setItems([...items, items[randInd]]);
   };
 
   return (
