@@ -10,10 +10,10 @@ function App() {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((data) => {
-        data.reduce((acc: Todo[], cur: Todo) => {
+        const newArray = data.reduce((acc: Todo[], cur: Todo) => {
           return [...acc, [cur.id, cur.title]];
         }, []);
-        setItems(data);
+        setItems(newArray);
       });
   }, []);
 

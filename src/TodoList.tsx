@@ -1,16 +1,12 @@
-import Todo from './types';
+import { Props } from './types';
 
-type TodoListProps = {
-  todos: Todo[];
-};
-
-const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+const TodoList: React.FC<Props> = ({ todos }) => {
   return (
     <>
-      {todos.map((todo) => {
+      {todos.map((todo: any) => {
         return (
           <p>
-            {todo.id} {todo.title}
+            {todo[0]} {todo[1]}
           </p>
         );
       })}

@@ -3,4 +3,8 @@ type Todo = {
   title: string;
 };
 
+export type Props = {
+  todos: Todo[];
+};
+
 export default Todo;
