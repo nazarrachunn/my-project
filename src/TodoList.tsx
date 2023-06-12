@@ -1,6 +1,8 @@
-import { Props } from './types';
+import { useContext } from 'react';
+import { TodosContext } from './App';
 
-const TodoList: React.FC<Props> = ({ todos }) => {
+function TodoList() {
+  const todos = useContext(TodosContext);
   return (
     <>
       {todos.map((todo) => {
@@ -12,6 +14,6 @@ const TodoList: React.FC<Props> = ({ todos }) => {
       })}
     </>
   );
-};
+}
 
 export default TodoList;
