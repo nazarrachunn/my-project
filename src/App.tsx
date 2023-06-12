@@ -20,7 +20,6 @@ function App() {
   const handleGenerateItem = () => {
     setItems([...items, [items.length + 1, 'random text']]);
   };
-  console.log(items);
   return (
     <>
       <header className="App-header">
