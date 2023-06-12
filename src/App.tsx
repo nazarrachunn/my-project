@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import TodoList from './TodoList';
-import Todo, { TodoArray, Todos } from './types';
+import Todo, { Todos } from './types';
 
 function App() {
   const [items, setItems] = useState<Todos>([]);
