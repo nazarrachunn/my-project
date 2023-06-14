@@ -1,7 +1,11 @@
 import { useEffect, useState } from 'react';
+import React from 'react';
 import './App.css';
 import TodoList from './TodoList';
 import Todo, { Todos } from './types';
+
+export const TodosContext = React.createContext<Todos>([]);
+
 
 function App() {
   const [items, setItems] = useState<Todos>([]);
@@ -26,7 +30,10 @@ function App() {
         <button className="btn" onClick={handleGenerateItem}>
           Generate item
         </button>
-        <TodoList todos={items} />
+        <TodosContext.Provider value={items}>
+          <TodoList />
+        </TodosContext.Provider>
+
       </header>
     </>
   );
