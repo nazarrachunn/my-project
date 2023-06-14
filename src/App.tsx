@@ -6,6 +6,7 @@ import Todo, { Todos } from './types';
 
 export const TodosContext = React.createContext<Todos>([]);
 
+
 function App() {
   const [items, setItems] = useState<Todos>([]);
 
@@ -32,6 +33,7 @@ function App() {
         <TodosContext.Provider value={items}>
           <TodoList />
         </TodosContext.Provider>
+
       </header>
     </>
   );
