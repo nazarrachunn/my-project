@@ -1,42 +1,32 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
-
-interface Todo {
-  id: number;
-  title: string;
-}
+import TodoList from './TodoList';
+import Todo, { Todos } from './types';
 
 function App() {
-  const [items, setItems] = useState<Todo[]>([]);
+  const [items, setItems] = useState<Todos>([]);
 
   useEffect(() => {
     fetch('https://jsonplaceholder.typicode.com/todos')
       .then((response) => response.json())
       .then((data) => {
-        const todos = data.reduce((acc: Todo[], obj: Todo) => {
-          return [...acc, { id: obj.id, title: obj.title }];
+        const array = data.reduce((acc: Todos, cur: Todo) => {
+          return [...acc, [cur.id, cur.title]];
         }, []);
-        setItems(todos);
+        setItems(array);
       });
   }, []);
 
   const handleGenerateItem = () => {
-    setItems([...items, { id: 4, title: 'et porro tempora' }]);
+    setItems([...items, [items.length + 1, 'random text']]);
   };
-
   return (
     <>
       <header className="App-header">
         <button className="btn" onClick={handleGenerateItem}>
           Generate item
         </button>
-        {items.map((item) => {
-          return (
-            <pre key={item.id}>
-              {item.id} {item.title}
-            </pre>
-          );
-        })}
+        <TodoList todos={items} />
       </header>
     </>
   );
