@@ -3,11 +3,12 @@ import { TodosContext } from './App';
 
 function TodoList() {
   const todos = useContext(TodosContext);
+
   return (
     <>
       {todos.map((todo) => {
         return (
-          <p>
+          <p key={todo[0]}>
             {todo[0]} {todo[1]}
           </p>
         );
