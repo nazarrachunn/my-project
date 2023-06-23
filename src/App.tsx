@@ -1,11 +1,9 @@
 import React from 'react';
 import './App.css';
-import TodoList from './TodoList';
-import Todo, { Todos } from './types';
+import Todo, { Todos, newTodoType } from './types';
 import { useQuery } from 'react-query';
 import axios from 'axios';
-
-export const TodosContext = React.createContext<Todos>([]);
+import { useMutation } from 'react-query';
 
 const fetchTodos = (): Promise<Todos> =>
   axios.get('https://jsonplaceholder.typicode.com/todos').then((res) =>
@@ -20,6 +18,19 @@ function App() {
     queryFn: fetchTodos,
   });
 
+  const mutation = useMutation({
+    mutationFn: (newTodoItem: newTodoType) => {
+      return axios.post(
+        'https://jsonplaceholder.typicode.com/todos',
+        newTodoItem
+      );
+    },
+    onSuccess: (data, variables, context: any) => {
+      console.log('New Todo:', data);
+      console.log('Status Code:', context?.response?.status);
+    },
+  });
+
   if (isLoading) return <div>Loading ...</div>;
   if (error) return <div>Request failed with status code 404</div>;
 
@@ -28,9 +39,26 @@ function App() {
   return (
     <>
       <header className="App-header">
-        <TodosContext.Provider value={todosData}>
-          <TodoList />
-        </TodosContext.Provider>
+        <button
+          className="btn"
+          onClick={() =>
+            mutation.mutate({
+              userId: 1,
+              id: 201,
+              title: 'delectus aut autem',
+              completed: true,
+            })
+          }
+        >
+          Create Todo
+        </button>
+        {todosData.map((todo) => {
+          return (
+            <p key={todo[0]}>
+              {todo[0]} {todo[1]}
+            </p>
+          );
+        })}
       </header>
     </>
   );
