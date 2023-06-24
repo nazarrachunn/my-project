@@ -1,9 +1,9 @@
 import React from 'react';
 import './App.css';
 import Todo, { Todos, newTodoType } from './types';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation } from 'react-query';
 import axios from 'axios';
-import { useMutation } from 'react-query';
+import { QueryClient } from '@tanstack/react-query';
 
 const fetchTodos = (): Promise<Todos> =>
   axios.get('https://jsonplaceholder.typicode.com/todos').then((res) =>
@@ -13,6 +13,8 @@ const fetchTodos = (): Promise<Todos> =>
   );
 
 function App() {
+  const queryClient = new QueryClient();
+
   const { data, isLoading, error } = useQuery({
     queryKey: ['todos'],
     queryFn: fetchTodos,
@@ -25,9 +27,8 @@ function App() {
         newTodoItem
       );
     },
-    onSuccess: (data, variables, context: any) => {
-      console.log('New Todo:', data);
-      console.log('Status Code:', context?.response?.status);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
 
