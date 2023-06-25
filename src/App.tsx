@@ -1,39 +1,59 @@
-import { useEffect, useState } from 'react';
 import React from 'react';
 import './App.css';
-import TodoList from './TodoList';
-import Todo, { Todos } from './types';
+import Todo, { Todos, newTodoType } from './types';
+import { useQuery, useMutation, QueryClient } from 'react-query';
+import axios from 'axios';
 
-export const TodosContext = React.createContext<Todos>([]);
-
+const fetchTodos = (): Promise<Todos> =>
+  axios.get('https://jsonplaceholder.typicode.com/todos').then((res) =>
+    res.data.reduce((acc: Todos, cur: Todo) => {
+      return [...acc, [cur.id, cur.title]];
+    }, [])
+  );
 
 function App() {
-  const [items, setItems] = useState<Todos>([]);
+  const queryClient = new QueryClient();
 
-  useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/todos')
-      .then((response) => response.json())
-      .then((data) => {
-        const array = data.reduce((acc: Todos, cur: Todo) => {
-          return [...acc, [cur.id, cur.title]];
-        }, []);
-        setItems(array);
-      });
-  }, []);
+  const { data = [] } = useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodos,
+  });
 
-  const handleGenerateItem = () => {
-    setItems([...items, [items.length + 1, 'random text']]);
-  };
+  const mutation = useMutation({
+    mutationFn: (newTodoItem: newTodoType) => {
+      return axios.post(
+        'https://jsonplaceholder.typicode.com/todos',
+        newTodoItem
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['todos'] });
+    },
+  });
+
   return (
     <>
       <header className="App-header">
-        <button className="btn" onClick={handleGenerateItem}>
-          Generate item
+        <button
+          className="btn"
+          onClick={() =>
+            mutation.mutate({
+              userId: 1,
+              id: 201,
+              title: 'delectus aut autem',
+              completed: true,
+            })
+          }
+        >
+          Create Todo
         </button>
-        <TodosContext.Provider value={items}>
-          <TodoList />
-        </TodosContext.Provider>
-
+        {data.map((todo) => {
+          return (
+            <p key={todo[0]}>
+              {todo[0]} {todo[1]}
+            </p>
+          );
+        })}
       </header>
     </>
   );
