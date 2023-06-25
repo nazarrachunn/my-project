@@ -1,9 +1,8 @@
 import React from 'react';
 import './App.css';
 import Todo, { Todos, newTodoType } from './types';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery, useMutation, QueryClient } from 'react-query';
 import axios from 'axios';
-import { QueryClient } from '@tanstack/react-query';
 
 const fetchTodos = (): Promise<Todos> =>
   axios.get('https://jsonplaceholder.typicode.com/todos').then((res) =>
@@ -15,7 +14,7 @@ const fetchTodos = (): Promise<Todos> =>
 function App() {
   const queryClient = new QueryClient();
 
-  const { data, isLoading, error } = useQuery({
+  const { data = [] } = useQuery({
     queryKey: ['todos'],
     queryFn: fetchTodos,
   });
@@ -31,11 +30,6 @@ function App() {
       queryClient.invalidateQueries({ queryKey: ['todos'] });
     },
   });
-
-  if (isLoading) return <div>Loading ...</div>;
-  if (error) return <div>Request failed with status code 404</div>;
-
-  const todosData = Array.isArray(data) ? data : [];
 
   return (
     <>
@@ -53,7 +47,7 @@ function App() {
         >
           Create Todo
         </button>
-        {todosData.map((todo) => {
+        {data.map((todo) => {
           return (
             <p key={todo[0]}>
               {todo[0]} {todo[1]}
